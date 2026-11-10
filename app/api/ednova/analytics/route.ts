@@ -3,7 +3,7 @@ import { getCurrentUser } from "@/lib/ednova/auth";
 import { db, isDatabaseAvailable } from "@/lib/ednova/db";
 import type { LearningProgress, LearnerProfile, StudySession, SupportedLanguage, LearningStyle } from "@/lib/ednova/types";
 import type { QuizResult } from "@/lib/ednova/progress-storage";
-import type { StudySession as PrismaStudySession, QuizAttempt as PrismaQuizAttempt } from "@prisma/client";
+
 
 export const runtime = "nodejs";
 
@@ -106,7 +106,7 @@ export async function GET() {
       : null;
 
     // Convert sessions
-    const sessions: StudySession[] = fullUser.sessions.map((s: PrismaStudySession) => ({
+    const sessions: StudySession[] = fullUser.sessions.map((s: (typeof fullUser.sessions)[number]) => ({
       id: s.id,
       kind: (s.mode as "focus" | "break" | "long-break" | "custom") || "focus",
       plannedMinutes: s.durationMinutes,
@@ -115,7 +115,7 @@ export async function GET() {
     }));
 
     // Convert quizzes
-    const quizzes: QuizResult[] = fullUser.quizzes.map((q: PrismaQuizAttempt) => ({
+    const quizzes: QuizResult[] = fullUser.quizzes.map((q: (typeof fullUser.quizzes)[number]) => ({
       id: q.id,
       topic: q.topic,
       total: q.total,
