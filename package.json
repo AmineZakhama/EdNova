@@ -1,0 +1,45 @@
+{
+  "name": "ednova",
+  "version": "1.0.0",
+  "description": "EdNova – GenAI Peer Learning Companion",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint"
+  },
+  "dependencies": {
+    "@google/generative-ai": "^0.24.1",
+    "@prisma/adapter-pg": "^7.4.2",
+    "@prisma/client": "^7.4.2",
+    "chart.js": "^4.6.1",
+    "jspdf": "^4.2.1",
+    "lucide-react": "^1.14.0",
+    "next": "16.1.6",
+    "pdf-parse": "^1.1.1",
+    "pg": "^8.20.0",
+    "react": "19.2.3",
+    "react-chartjs-2": "^5.3.1",
+    "react-dom": "19.2.3",
+    "react-markdown": "^10.1.0",
+    "stripe": "^23.1.0",
+    "zod": "^4.3.6"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4",
+    "@types/node": "^20",
+    "@types/pdf-parse": "^1.1.5",
+    "@types/pg": "^8.11.11",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "eslint": "^9",
+    "eslint-config-next": "16.1.6",
+    "jsdom": "^31.0.0",
+    "prisma": "^7.4.2",
+    "tailwindcss": "^4",
+    "typescript": "^5",
+    "vite": "^8.3.6",
+    "vitest": "^5.1.0"
+  }
+}

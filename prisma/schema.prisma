@@ -1,0 +1,120 @@
+datasource db {
+  provider = "postgresql"
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+enum Role {
+  STUDENT
+  ADMIN
+}
+
+model User {
+  id           String            @id @default(uuid())
+  email        String            @unique
+  passwordHash String
+  name         String
+  avatar       String            @default("✨")
+  role         Role              @default(STUDENT)
+  tokens       Int               @default(25000)
+  createdAt    DateTime          @default(now())
+  updatedAt    DateTime          @updatedAt
+
+  profile      LearnerProfile?
+  progress     LearningProgress?
+  sessions     StudySession[]
+  quizzes      QuizAttempt[]
+  flashcards   Flashcard[]
+  notes        KnowledgeNote[]
+  transactions TokenTransaction[]
+}
+
+model LearnerProfile {
+  id                 String   @id @default(uuid())
+  userId             String   @unique
+  user               User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  onboarded          Boolean  @default(false)
+  level              String   @default("developing learner")
+  learningStyles     String   @default("[\"step-by-step\"]")
+  subjects           String   @default("[]")
+  language           String   @default("en")
+  mode               String   @default("individual")
+  dailyStudyMinutes  Int      @default(25)
+  preferredStudyTime String   @default("")
+  cognitiveArchetype String?
+  cognitiveTraits    String?
+  scaffoldingPace    String?
+  confusionCount     Int      @default(0)
+  hintsUsed          Int      @default(0)
+  focusMinutes       Int      @default(0)
+  updatedAt          DateTime @updatedAt
+}
+
+model LearningProgress {
+  id              String   @id @default(uuid())
+  userId          String   @unique
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  xp              Int      @default(0)
+  level           Int      @default(1)
+  streak          Int      @default(0)
+  badges          String   @default("[]")
+  subjectAccuracy String   @default("{}")
+  updatedAt       DateTime @updatedAt
+}
+
+model StudySession {
+  id              String   @id @default(uuid())
+  userId          String
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  subject         String
+  durationMinutes Int
+  mode            String   @default("focus")
+  completedAt     DateTime @default(now())
+}
+
+model QuizAttempt {
+  id          String   @id @default(uuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  topic       String
+  total       Int
+  correct     Int
+  completedAt DateTime @default(now())
+}
+
+model Flashcard {
+  id          String   @id @default(uuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  deck        String   @default("General")
+  subject     String   @default("General")
+  prompt      String
+  answer      String
+  easeFactor  Float    @default(2.5)
+  interval    Int      @default(0)
+  repetitions Int      @default(0)
+  dueDate     DateTime @default(now())
+  createdAt   DateTime @default(now())
+}
+
+model KnowledgeNote {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  title     String
+  content   String
+  createdAt DateTime @default(now())
+}
+
+model TokenTransaction {
+  id              String   @id @default(uuid())
+  userId          String
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  amount          Int      // positive for purchase/reward, negative for usage
+  type            String   // "SIGNUP_GRANT", "PURCHASE", "USAGE_FAST", "USAGE_THINKING", "STREAK_REWARD"
+  stripeSessionId String?  @unique
+  description     String?
+  createdAt       DateTime @default(now())
+}
